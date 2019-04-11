@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -39,6 +41,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	private static Label _score, _highscore, _lives;
 	private Button _easyMode, _mediumMode, _hardMode, _classicMode, _reSnakeMode, _instructions, _back;
 	private Board _boarde, _boardm, _boardh, _current;
+	Image snake;
+	ImageView imgSnake;
 	
 	private boolean instructTF = false;
 	
@@ -79,21 +83,26 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		_reSnakeMode = new Button("Snake 2.0");
 		_instructions = new Button("Instructions");
 		_back = new Button("Back");
+		
+		snake = new Image(getClass().getResourceAsStream("\\assets\\snake.jpg"));
+		imgSnake = new ImageView(snake);
+		imgSnake.setFitWidth(100);
+		imgSnake.setFitHeight(100);
 	}
 	
 	public void initUICtrlEvents() {
 		_classicMode.setOnAction(e -> {							// switch from classic to remake(illusion new scene)
 			System.out.println("Classic Mode Event pressed");
 			_settingsPanel.getChildren().remove(_instructions);
-			_switchPanel.getChildren().remove(_classicMode);
-			_switchPanel.getChildren().add(_reSnakeMode);
+			_switchPanel.getChildren().removeAll(_classicMode, imgSnake);
+			_switchPanel.getChildren().addAll(_reSnakeMode, imgSnake);
 		});
 		
 		_reSnakeMode.setOnAction(e -> {							// switch from remake to classic(illusion new scene)
 			System.out.println("Remake Mode Event pressed");
 			_settingsPanel.getChildren().add(_instructions);
-			_switchPanel.getChildren().remove(_reSnakeMode);
-			_switchPanel.getChildren().add(_classicMode);
+			_switchPanel.getChildren().removeAll(_reSnakeMode, imgSnake);
+			_switchPanel.getChildren().addAll(_classicMode, imgSnake);
 		});
 		
 		_easyMode.setOnAction(e -> {
@@ -174,7 +183,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		_switchPanel = new VBox();
 		setPanes(_switchPanel, 100, 0, new Insets(10, 10, 10, 10), "cyan");
 		_switchPanel.setSpacing(15);
-		_switchPanel.getChildren().addAll(_classicMode);
+		_switchPanel.getChildren().addAll(_classicMode, imgSnake);
 		
 		_container = new HBox();
 		setPanes(_container, 0, 0, new Insets(10, 10, 10, 10), "darkgray");
@@ -237,6 +246,25 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	public static void setScore() {
 		_score.setText("Score: " + ++_scoreCounter);
 	}
+	
+	public static void setHighscore() {
+		_highscoreCounter = (_highscoreCounter > _scoreCounter) ? _highscoreCounter : _scoreCounter;
+		_highscore.setText("High Score: " + _highscoreCounter);
+	}
+	
+	public static void setLives() {
+		_lives.setText("Lives : " + --_livesCounter);
+	}
+	public static void reset() {
+		_scoreCounter = 0;
+		_livesCounter = 3;
+		_lives.setText("Lives : " + _livesCounter);
+		_score.setText("Score: " + _scoreCounter);
+	}
+	public static int getLives() {
+		return _livesCounter;
+	}
+	
 	
 	@Override
 	public void handle(ActionEvent event) {

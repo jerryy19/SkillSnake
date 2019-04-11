@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -15,15 +16,16 @@ import javafx.scene.shape.Rectangle;
 public class Snake extends Pane implements Sprite {
 	
 	private ArrayList<Body> snake = new ArrayList<>();
-	private static int _lives = 3;
+	private ArrayList<Double> _xpos = new ArrayList<>();
+	private ArrayList<Double> _ypos = new ArrayList<>();
+	
 	private static double _xdir, _ydir;
 	private int _bodyCount;
-//	private double _lastxpos = -75, _lastypos;
-	double _bwidth, _bheight;
-	double headx, heady;
 	
-	ArrayList<Double> xpos = new ArrayList<>();
-	ArrayList<Double> ypos = new ArrayList<>();
+	private double _bwidth, _bheight;
+	private double headx, heady;
+	
+	Button b;
 	
 	
 	Snake(double x, double y) {
@@ -41,13 +43,13 @@ public class Snake extends Pane implements Sprite {
 		
 		snake.add(new Body("Body#" + _bodyCount, _bodyCount));
 		snake.get(0).show();
-		xpos.add(snake.get(0).getTranslateX());
-		ypos.add(snake.get(0).getTranslateY());
+		_xpos.add(snake.get(0).getTranslateX());
+		_ypos.add(snake.get(0).getTranslateY());
 		
 		
 		
-		System.out.println("headx " + snake.get(0).getTranslateX());
-		System.out.println("heady " + snake.get(0).getTranslateY());
+//		System.out.println("headx " + snake.get(0).getTranslateX());
+//		System.out.println("heady " + snake.get(0).getTranslateY());
 		
 //		System.out.println(snake.get(i)._name);
 	}
@@ -58,12 +60,30 @@ public class Snake extends Pane implements Sprite {
 	}
 	
 	public void checkBounds() {
-		if(snake.get(0).getTranslateX() < 0 || snake.get(0).getTranslateX() > _bwidth ||
-				snake.get(0).getTranslateY() < 0 || snake.get(0).getTranslateY() > _bheight) {
-			endGame();
+		if(snake.get(0).getTranslateX() < 0 || snake.get(0).getTranslateX() > _bwidth - 25||
+				snake.get(0).getTranslateY() < 0 || snake.get(0).getTranslateY() > _bheight - 25) {
+//			endGame();
+			if(Main.getLives() > 0) {
+				retry();				
+			} else {
+				endGame();
+			}
 		}
 	}
 	
+	
+	public void retry() {
+		Main.setLives();
+		
+//		headx = 0;
+//		heady = 0;
+		
+//		snake.get(0).setTranslateX(0);
+//		snake.get(0).setTranslateY(0);
+		
+		shift(0, 0);
+		
+	}
 	public void setDirection(double xdir, double ydir) {
 		_xdir = xdir;
 		_ydir = ydir;
@@ -71,35 +91,62 @@ public class Snake extends Pane implements Sprite {
 	}
 	
 	public void update() {
-		xpos.set(0, snake.get(0).getTranslateX());
-		ypos.set(0, snake.get(0).getTranslateY());
+//		get positions before updating them
+		_xpos.set(0, snake.get(0).getTranslateX());
+		_ypos.set(0, snake.get(0).getTranslateY());
 		
-		snake.get(0).setTranslateX(snake.get(0).getTranslateX() + _xdir);
-		snake.get(0).setTranslateY(snake.get(0).getTranslateY() + _ydir);
+		shift(snake.get(0).getTranslateX() + _xdir, snake.get(0).getTranslateY() + _ydir);
+//		set new head position
+//		snake.get(0).setTranslateX(snake.get(0).getTranslateX() + _xdir);
+//		snake.get(0).setTranslateY(snake.get(0).getTranslateY() + _ydir);
 		
-		headx = snake.get(0).getTranslateX() + _xdir;
-		heady = snake.get(0).getTranslateY() + _ydir;
+//		new head position
+//		headx = snake.get(0).getTranslateX();
+//		heady = snake.get(0).getTranslateY();
+		
 		
 		System.out.println("headx " + headx);
 		System.out.println("heady " + heady);
 		System.out.println();
 		
-		for(int i = 1; i < snake.size(); i++) {
-			snake.get(i).setTranslateX(xpos.get(i - 1));
-			snake.get(i).setTranslateY(ypos.get(i - 1));
-				
-		}
-		for(int i = 0; i < snake.size(); i++) {
-			xpos.set(i, snake.get(i).getTranslateX());
-			ypos.set(i, snake.get(i).getTranslateY());
-		}
 		
 		checkBounds();
 		
-		
-		
-		
 	}
+	public void shift(double translateX, double translateY) {
+		
+		snake.get(0).setTranslateX(translateX);
+		snake.get(0).setTranslateY(translateY);
+		
+		headx = snake.get(0).getTranslateX();
+		heady = snake.get(0).getTranslateY();
+		
+//		shifting body positions
+		for(int i = 1; i < snake.size(); i++) {
+			snake.get(i).setTranslateX(_xpos.get(i - 1));
+			snake.get(i).setTranslateY(_ypos.get(i - 1));
+		}
+		
+//		get new translation
+		for(int i = 0; i < snake.size(); i++) {
+			_xpos.set(i, snake.get(i).getTranslateX());
+			_ypos.set(i, snake.get(i).getTranslateY());
+		}
+	}
+	
+//	public void shift() {
+////		shifting body positions
+//		for(int i = 1; i < snake.size(); i++) {
+//			snake.get(i).setTranslateX(_xpos.get(i - 1));
+//			snake.get(i).setTranslateY(_ypos.get(i - 1));
+//		}
+//		
+////		get new translation
+//		for(int i = 0; i < snake.size(); i++) {
+//			_xpos.set(i, snake.get(i).getTranslateX());
+//			_ypos.set(i, snake.get(i).getTranslateY());
+//		}
+//	}
 	
 	public void grow() {
 		_bodyCount++;
@@ -127,14 +174,13 @@ public class Snake extends Pane implements Sprite {
 		
 		snake.get(last).setTranslateX(lastxpos);
 		snake.get(last).setTranslateY(lastypos);
-		snake.get(last).setPosition(lastxpos, lastypos);
 		snake.get(last).show();
 		
 //		System.out.println(snake.get(last).getTranslateX());
 //		System.out.println(snake.get(last).getTranslateY());
 		
-		xpos.add(snake.get(last).getTranslateX());
-		ypos.add(snake.get(last).getTranslateY());
+		_xpos.add(snake.get(last).getTranslateX());
+		_ypos.add(snake.get(last).getTranslateY());
 		
 		getChildren().removeAll(snake);
 		getChildren().addAll(snake);
@@ -151,18 +197,35 @@ public class Snake extends Pane implements Sprite {
 	}
 	
 	public void restart() {
-		_lives = 3;
 		getChildren().addAll(snake);
 	}
 	public void endGame() {
 		getChildren().removeAll(snake);
+		Main.setHighscore();
+		Main.reset();
+		headx = 0;
+		heady = 0;
+		_bodyCount = 0;
+		snake.clear();
+		_xpos.clear();
+		_ypos.clear();
+		
+		b = new Button("retry");
+		b.setMinSize(100, 100);
+		b.relocate(150, 150);
+		b.setOnAction(e -> {
+			getChildren().remove(b);
+			
+			snake.add(new Body("Body#" + _bodyCount, _bodyCount));
+			snake.get(0).show();
+			_xpos.add(snake.get(0).getTranslateX());
+			_ypos.add(snake.get(0).getTranslateY());
+			
+			restart();
+		});
+		getChildren().add(b);
 	}
-	public void setLives(int lives) {
-		_lives = lives;
-	}
-	public int getLives() {
-		return _lives;
-	}
+	
 	
 	@Override
 	public String toString() {

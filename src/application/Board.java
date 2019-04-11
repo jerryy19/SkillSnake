@@ -99,19 +99,25 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		
 		if(event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
-			if(ke.getCode() == KeyCode.W) {
-				s.setDirection(0, -25);
-				checkPos();
-			} else if(ke.getCode() == KeyCode.A) {
-				s.setDirection(-25, 0);
-				checkPos();
-			} else if(ke.getCode() == KeyCode.S) {
-				s.setDirection(0, 25);
-				checkPos();
-			} else if(ke.getCode() == KeyCode.D) {
-				s.setDirection(25, 0);
-				checkPos();
-			}
+			try {
+				if(ke.getCode() == KeyCode.W) {
+					s.setDirection(0, -25);
+					checkFoodPos();
+					checkWallPos();
+				} else if(ke.getCode() == KeyCode.A) {
+					s.setDirection(-25, 0);
+					checkFoodPos();
+					checkWallPos();
+				} else if(ke.getCode() == KeyCode.S) {
+					s.setDirection(0, 25);
+					checkFoodPos();
+					checkWallPos();
+				} else if(ke.getCode() == KeyCode.D) {
+					s.setDirection(25, 0);
+					checkFoodPos();
+					checkWallPos();
+				}
+			} catch(Exception e) {System.out.println("err");}
 			
 //			if(((KeyEvent) event).getCode() == KeyCode.I) {
 //				s.setTranslateX(s.getTranslateX() + 25);
@@ -120,13 +126,23 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		}
 	}
 	
-	public void checkPos() {
+	public void checkFoodPos() {
 		if((int)s.getHeadxPos() == (int)f.getTranslateX() && (int)s.getHeadyPos() == (int)f.getTranslateY()) {
-//			System.out.println("true");
+			System.out.println("food true");
 			f.setTranslateX(r.nextInt(_width / 25) * 25);
 			f.setTranslateY(r.nextInt(_height / 25) * 25);
 			s.grow();
 			Main.setScore();
+		}
+	}
+	
+	public void checkWallPos() {
+		if((int)s.getHeadxPos() == (int)w.getTranslateX() && (int)s.getHeadyPos() == (int)w.getTranslateY()) {
+			System.out.println("wall true");
+			w.setTranslateX(r.nextInt(_width / 25) * 25);
+			w.setTranslateY(r.nextInt(_height / 25) * 25);
+			Main.setLives();
+//			Main_v2.setScore();
 		}
 	}
 	
