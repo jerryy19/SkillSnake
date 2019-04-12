@@ -14,17 +14,17 @@ import javafx.scene.shape.Rectangle;
 
 public class Food extends Pane implements Sprite {
 	
-	private Rectangle _rContainer;		// outline box(unnecessary)
-	private int _width, _height;		// width / height of Wall
-	private String _name;				// name of Wall
+	private Rectangle rContainer;		// outline box(unnecessary)
+	private int width, height;			// width / height of Wall
+	private String name;				// name of Wall
 	Image apple;
 	ImageView imgApple;
 	
 	Food(String name) {
 		
-		_width = 25;
-		_height = 25;
-		_name = name;
+		width = 25;
+		height = 25;
+		name = name;
 		draw();
 		
 	}
@@ -39,8 +39,8 @@ public class Food extends Pane implements Sprite {
 	
 	@Override
 	public void show() {
-//		_r = new Rectangle(_width, _height);
-//		_r.setFill(Color.RED);
+//		r = new Rectangle(width, height);
+//		r.setFill(Color.RED);
 		getChildren().add(imgApple);
 	}
 	

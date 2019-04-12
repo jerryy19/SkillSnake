@@ -14,17 +14,17 @@ import javafx.scene.text.Font;
 
 public class Body extends StackPane implements Sprite {
 	
-	private Rectangle _body;		// Body of snake
-	private int _width, _height;		// width / height of Body
-	private String _name;				// name of Body
+	private Rectangle body;				// Body of snake
+	private int width, height;			// width / height of Body
+	private String name;				// name of Body
 	static int count;
-	private Label _lcount;
+	private Label lcount;
 	
 	Body(String name, int bodyCount) {
 		
-		_width = 25;
-		_height = 25;
-		_name = name;
+		width = 25;
+		height = 25;
+		name = name;
 		count = bodyCount;
 		draw();
 		
@@ -32,18 +32,18 @@ public class Body extends StackPane implements Sprite {
 	
 	@Override
 	public void draw() {
-		_body = new Rectangle(_width, _height);
-		_body.setFill(Color.TRANSPARENT);
-		_body.setStroke(Color.CRIMSON);
+		body = new Rectangle(width, height);
+		body.setFill(Color.TRANSPARENT);
+		body.setStroke(Color.CRIMSON);
 		
-		_lcount = new Label(Integer.toString(count));
-		_lcount.setTextFill(Color.BLACK);
-		_lcount.setFont(Font.font(15));
+		lcount = new Label(Integer.toString(count));
+		lcount.setTextFill(Color.BLACK);
+		lcount.setFont(Font.font(15));
 	}
 	
 	@Override
 	public void show() {
-		getChildren().addAll(_body, _lcount);
+		getChildren().addAll(body, lcount);
 	}
 	
 }

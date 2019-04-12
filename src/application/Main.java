@@ -28,21 +28,22 @@ import javafx.scene.text.Font;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
 	
-	private Scene _scene;
-	private HBox _container;										// Main Container
-	private VBox _settingsPanel, _gamePanel, _switchPanel;			// embedded to Container
-	private VBox _boardContainer;									// in GamePanel
-	private VBox _instructionsPanel;								// in GamePanel
-	private StackPane _scorePanel;							// in GamePanel
-	private static int _scoreCounter = 0;
-	private static int _highscoreCounter = 0;
-	private static int _livesCounter = 3;
+	private Scene scene;
+	private HBox container;										// Main Container
+	private VBox settingsPanel, gamePanel, switchPanel;			// embedded to Container
+	private VBox boardContainer;								// in GamePanel
+	private VBox instructionsPanel;								// in GamePanel
+	private StackPane scorePanel;								// in GamePanel
+	private static int scoreCounter = 0;
+	private static int highscoreCounter = 0;
+	private static int livesCounter = 3;
 	
-	private static Label _score, _highscore, _lives;
-	private Button _easyMode, _mediumMode, _hardMode, _classicMode, _reSnakeMode, _instructions, _back;
-	private Board _boarde, _boardm, _boardh, _current;
-	Image snake;
-	ImageView imgSnake;
+	private static Label score, highscore, lives;
+	private Button easyMode, mediumMode, hardMode, classicMode, snake20Mode, instructions, back;
+	private Board boarde, boardm, boardh, current;
+	private Image snake;
+	private ImageView imgSnake;
+	TextArea ins;
 	
 	private boolean instructTF = false;
 	
@@ -57,32 +58,33 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 		initGUI();					// initialize gui
 		
-		_scene = new Scene(_container);
-		_scene.setOnKeyPressed(_current);
+		scene = new Scene(container);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		scene.setOnKeyPressed(current);
 		
-		primaryStage.setScene(_scene);
+		primaryStage.setScene(scene);
 		primaryStage.setTitle("Snaaaaake");
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 		primaryStage.show();
 		
-		System.out.printf("Scene Width : %s%n",_scene.getWidth());
-		System.out.printf("Scene Height : %s%n", _scene.getHeight());
+		System.out.printf("Scene Width : %s%n",scene.getWidth());
+		System.out.printf("Scene Height : %s%n", scene.getHeight());
 		
 	}
 	
 	public void initUICtrl() {
-		_score = new Label("Score: " + _scoreCounter);
-		_highscore = new Label("Highscore: " + _highscoreCounter);
-		_lives = new Label("Lives: " + _livesCounter);
+		score = new Label("Score: 0");
+		highscore = new Label("Highscore: 0");
+		lives = new Label("Lives: 3");
 		
-		_easyMode = new Button("Easy");
-		_mediumMode = new Button("Medium");
-		_hardMode = new Button("Hard");
-		_classicMode = new Button("Classic");
-		_reSnakeMode = new Button("Snake 2.0");
-		_instructions = new Button("Instructions");
-		_back = new Button("Back");
+		easyMode = new Button("Easy");
+		mediumMode = new Button("Medium");
+		hardMode = new Button("Hard");
+		classicMode = new Button("Classic");
+		snake20Mode = new Button("Snake 2.0");
+		instructions = new Button("Instructions");
+		back = new Button("Back");
 		
 		snake = new Image(getClass().getResourceAsStream("\\assets\\snake.jpg"));
 		imgSnake = new ImageView(snake);
@@ -91,104 +93,117 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	}
 	
 	public void initUICtrlEvents() {
-		_classicMode.setOnAction(e -> {							// switch from classic to remake(illusion new scene)
+		classicMode.setOnAction(e -> {							// switch from classic to remake(illusion new scene)
 			System.out.println("Classic Mode Event pressed");
-			_settingsPanel.getChildren().remove(_instructions);
-			_switchPanel.getChildren().removeAll(_classicMode, imgSnake);
-			_switchPanel.getChildren().addAll(_reSnakeMode, imgSnake);
+			settingsPanel.getChildren().remove(instructions);
+			switchPanel.getChildren().removeAll(classicMode, imgSnake);
+			switchPanel.getChildren().addAll(snake20Mode, imgSnake);
+			scorePanel.getChildren().remove(lives);
+			
+			boarde.setMode("classicMode");
+			boardm.setMode("classicMode");
+			boardh.setMode("classicMode");
+			current.checkMode();
 		});
 		
-		_reSnakeMode.setOnAction(e -> {							// switch from remake to classic(illusion new scene)
+		snake20Mode.setOnAction(e -> {							// switch from remake to classic(illusion new scene)
 			System.out.println("Remake Mode Event pressed");
-			_settingsPanel.getChildren().add(_instructions);
-			_switchPanel.getChildren().removeAll(_reSnakeMode, imgSnake);
-			_switchPanel.getChildren().addAll(_classicMode, imgSnake);
+			settingsPanel.getChildren().add(instructions);
+			switchPanel.getChildren().removeAll(snake20Mode, imgSnake);
+			switchPanel.getChildren().addAll(classicMode, imgSnake);
+			scorePanel.getChildren().add(lives);
+			
+			boarde.setMode("snake20Mode");
+			boardm.setMode("snake20Mode");
+			boardh.setMode("snake20Mode");
+			current.checkMode();
 		});
 		
-		_easyMode.setOnAction(e -> {
+		easyMode.setOnAction(e -> {
 			System.out.println("Easy Mode Event pressed");
 			if(instructTF) {
+				container.getChildren().removeAll(instructionsPanel, switchPanel);
+				container.getChildren().addAll(gamePanel, switchPanel);
 				instructTF = false;
-				_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-				_gamePanel.getChildren().remove(_instructionsPanel);
 			}
-			_boardContainer.getChildren().remove(_current);
-			_boardContainer.getChildren().add(_boarde);
-			_current = _boarde;
-			_scene.setOnKeyPressed(_current);
+			boardContainer.getChildren().remove(current);
+			boardContainer.getChildren().add(boarde);
+			current = boarde;
+			scene.setOnKeyPressed(current);
+			current.checkMode();
 		});
 		
-		_mediumMode.setOnAction(e -> {
+		mediumMode.setOnAction(e -> {
 			System.out.println("Medium Mode Event pressed");
 			if(instructTF) {
-				_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-				_gamePanel.getChildren().remove(_instructionsPanel);
+				container.getChildren().removeAll(instructionsPanel, switchPanel);
+				container.getChildren().addAll(gamePanel, switchPanel);
 				instructTF = false;
 			}
-			_boardContainer.getChildren().remove(_current);
-			_boardContainer.getChildren().add(_boardm);
-			_current = _boardm;
-			_scene.setOnKeyPressed(_current);
+			boardContainer.getChildren().remove(current);
+			boardContainer.getChildren().add(boardm);
+			current = boardm;
+			scene.setOnKeyPressed(current);
+			current.checkMode();
 		});
 		
-		_hardMode.setOnAction(e -> {
+		hardMode.setOnAction(e -> {
 			System.out.println("Hard Mode Event pressed");
 			if(instructTF) {
-				_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-				_gamePanel.getChildren().remove(_instructionsPanel);
+				container.getChildren().removeAll(instructionsPanel, switchPanel);
+				container.getChildren().addAll(gamePanel, switchPanel);
 				instructTF = false;
 			}
-			_boardContainer.getChildren().remove(_current);
-			_boardContainer.getChildren().add(_boardh);
-			_current = _boardh;
-			_scene.setOnKeyPressed(_current);
+			boardContainer.getChildren().remove(current);
+			boardContainer.getChildren().add(boardh);
+			current = boardh;
+			scene.setOnKeyPressed(current);
+			current.checkMode();
 		});
 		
-		_instructions.setOnAction(e -> {
+		instructions.setOnAction(e -> {
 			System.out.println("Instructions pressed");
 			if(instructTF) {
-				_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-				_gamePanel.getChildren().remove(_instructionsPanel);
+				container.getChildren().removeAll(instructionsPanel, switchPanel);
+				container.getChildren().addAll(gamePanel, switchPanel);
 				instructTF = false;
 			} else {
-				_gamePanel.getChildren().removeAll(_scorePanel, _boardContainer);
-				_gamePanel.getChildren().add(_instructionsPanel);
+				container.getChildren().removeAll(gamePanel, switchPanel);
+				container.getChildren().addAll(instructionsPanel, switchPanel);
 				instructTF = true;
 			}
-			
 		});
 		
-		_back.setOnAction(e -> {
+		back.setOnAction(e -> {
 			System.out.println("back pressed");
+			container.getChildren().removeAll(instructionsPanel, switchPanel);
+			container.getChildren().addAll(gamePanel, switchPanel);
 			instructTF = false;
-			_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-			_gamePanel.getChildren().remove(_instructionsPanel);
 		});
 	}
 
 	public void initGUI() {
 		
-		_settingsPanel = new VBox();
-		setPanes(_settingsPanel, 100, 0, new Insets(10, 0, 10, 10), "cyan");
-		_settingsPanel.setSpacing(15);
-		_settingsPanel.getChildren().addAll(_easyMode, _mediumMode, _hardMode, _instructions);
+		settingsPanel = new VBox();
+		setPanes(settingsPanel, 100, 0, new Insets(10, 0, 10, 10), "cyan");
+		settingsPanel.setSpacing(15);
+		settingsPanel.getChildren().addAll(easyMode, mediumMode, hardMode, instructions);
 		
-		_gamePanel = new VBox();
-		setPanes(_gamePanel, 420, 440, new Insets(10, 10, 10, 10), "red");
-		_gamePanel.setAlignment(Pos.CENTER);
-		_gamePanel.setSpacing(15);
-		_gamePanel.getChildren().addAll(_scorePanel, _boardContainer);
-//		_gamePanel.getChildren().add(_boardContainer);
+		gamePanel = new VBox();
+		setPanes(gamePanel, 420, 440, new Insets(10, 10, 10, 10), "red");
+		gamePanel.setAlignment(Pos.CENTER);
+		gamePanel.setSpacing(15);
+		gamePanel.getChildren().addAll(scorePanel, boardContainer);
 		
-		_switchPanel = new VBox();
-		setPanes(_switchPanel, 100, 0, new Insets(10, 10, 10, 10), "cyan");
-		_switchPanel.setSpacing(15);
-		_switchPanel.getChildren().addAll(_classicMode, imgSnake);
+		switchPanel = new VBox();
+		setPanes(switchPanel, 100, 0, new Insets(10, 10, 10, 10), "cyan");
+		switchPanel.setSpacing(15);
+		switchPanel.getChildren().addAll(classicMode, imgSnake);
 		
-		_container = new HBox();
-		setPanes(_container, 0, 0, new Insets(10, 10, 10, 10), "darkgray");
-		_container.setSpacing(15);
-		_container.getChildren().addAll(_settingsPanel, _gamePanel, _switchPanel);
+		container = new HBox();
+		setPanes(container, 0, 0, new Insets(10, 10, 10, 10), "darkgray");
+		container.setSpacing(15);
+		container.getChildren().addAll(settingsPanel, gamePanel, switchPanel);
 		
 	}
 
@@ -199,72 +214,92 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	}
 	
 	public void initGame() {
-		_boarde = new Board(400, 400, "boarde");
-		_boardm = new Board(300, 300, "boardm");
-		_boardh = new Board(200, 200, "boardh");
+		boarde = new Board(400, 400, "boarde");
+		boardm = new Board(300, 300, "boardm");
+		boardh = new Board(200, 200, "boardh");
 		
-		_boarde.show();
-		_boardm.show();
-		_boardh.show();
+		boarde.show();
+		boardm.show();
+		boardh.show();
 		
-		_current = _boarde;
+		current = boarde;
 		
-		_scorePanel = new StackPane();
-		setPanes(_scorePanel, 400, 25, new Insets(0, 10, 0, 10), "green");
-		_scorePanel.setMaxSize(400, 25);
-		StackPane.setAlignment(_score, Pos.CENTER_LEFT);
-		StackPane.setAlignment(_highscore, Pos.CENTER);
-		StackPane.setAlignment(_lives, Pos.CENTER_RIGHT);
-		_scorePanel.getChildren().addAll(_score, _highscore, _lives);
+		scorePanel = new StackPane();
+		setPanes(scorePanel, 400, 25, new Insets(0, 10, 0, 10), "green");
+		scorePanel.setMaxSize(400, 25);
+		StackPane.setAlignment(score, Pos.CENTER_LEFT);
+		StackPane.setAlignment(highscore, Pos.CENTER);
+		StackPane.setAlignment(lives, Pos.CENTER_RIGHT);
+		scorePanel.getChildren().addAll(score, highscore, lives);
 		
 		
-		_boardContainer= new VBox();
-		setPanes(_boardContainer, 402, 402, new Insets(0, 0, 0, 0), "blue");	// transparent
-		_boardContainer.setAlignment(Pos.CENTER);
-		_boardContainer.getChildren().addAll(_current);
+		boardContainer= new VBox();
+		setPanes(boardContainer, 402, 402, new Insets(0, 0, 0, 0), "blue");	// transparent
+		boardContainer.setAlignment(Pos.CENTER);
+		boardContainer.getChildren().addAll(current);
 		
-		_instructionsPanel = new VBox();
-		_instructionsPanel.setSpacing(15);
-		setPanes(_instructionsPanel, 402, 442, new Insets(10, 10, 10, 10), "purple");
-		_instructionsPanel.setAlignment(Pos.BASELINE_CENTER);
 		
-		//"  aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa  "
-		TextArea ins = new TextArea();
-		ins.setText("  aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa");
-		ins.setPrefSize(200, 300);
-//		ins.setStyle("-fx-background-color: transparent");
-//		ins.setStyle("-fx-text-fill: #000; -fx-opacity: 1.0; ");
-//		ins.setEditable(false);
+		instructionsPanel = new VBox();
+		setPanes(instructionsPanel, 420, 440, new Insets(10, 10, 10, 10), "purple");
+		instructionsPanel.setAlignment(Pos.CENTER);
+		instructionsPanel.setSpacing(15);
+		
+		
+		
+		ins = new TextArea();
+					//"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+		ins.setText  ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+		
+		ins.setPrefSize(402, 400);
+		ins.setEditable(false);
 		ins.setStyle("-fx-font: 15 times;");
 		
 //		Label ins = new Label("  aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa\n");
 //		ins.setTextFill(Color.PURPLE);
 //		ins.setFont(Font.font(15));
-		_instructionsPanel.getChildren().addAll(_back, ins);
+		instructionsPanel.getChildren().addAll(back, ins);
 		
 	}
-	public static void setScore() {
-		_score.setText("Score: " + ++_scoreCounter);
+	
+	public static void updateScore() {
+		score.setText("Score: " + ++scoreCounter);
 	}
 	
-	public static void setHighscore() {
-		_highscoreCounter = (_highscoreCounter > _scoreCounter) ? _highscoreCounter : _scoreCounter;
-		_highscore.setText("High Score: " + _highscoreCounter);
+	public static void updateHighscore() {
+		highscoreCounter = (highscoreCounter > scoreCounter) ? highscoreCounter : scoreCounter;
+		highscore.setText("High Score: " + highscoreCounter);
 	}
 	
-	public static void setLives() {
-		_lives.setText("Lives : " + --_livesCounter);
+	public static void updateLives() {
+		lives.setText("Lives : " + --livesCounter);
 	}
+	
 	public static void reset() {
-		_scoreCounter = 0;
-		_livesCounter = 3;
-		_lives.setText("Lives : " + _livesCounter);
-		_score.setText("Score: " + _scoreCounter);
-	}
-	public static int getLives() {
-		return _livesCounter;
+		scoreCounter = 0;
+		livesCounter = 3;
+		lives.setText("Lives : " + livesCounter);
+		score.setText("Score: " + scoreCounter);
 	}
 	
+	public static int getLives() {
+		return livesCounter;
+	}
 	
 	@Override
 	public void handle(ActionEvent event) {

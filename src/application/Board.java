@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -20,35 +21,37 @@ import javafx.scene.layout.VBox;
 
 public class Board extends VBox implements Sprite, EventHandler<Event> {
 	
-	private Rectangle _rContainer;		// outline box(unnecessary)
-	private int _width, _height;		// width / height of Board
-	private String _name;				// name of Board
+	private Rectangle rContainer;		// outline box(unnecessary)
+	private int width, height;		// width / height of Board
+	private String name;				// name of Board
 	private Rectangle[][] grid;
 	Pane p;
 	Snake s;
 	Food f;
 	Wall w;
+	String mode =  "snake20Mode";
+
 	
 	Random r = new Random();
 	
 	Board(int w, int h, String name) {
-		_width = w;
-		_height = h;
-		
+		width = w;
+		height = h;
+		this.name = name;
 		draw();
 		
 //		W A S D
 		setOnKeyPressed(this);
 	}
 	public void draw() {
-		_rContainer = new Rectangle(_width, _height);
-//		_rContainer.setStroke(Color.BLACK);
-		_rContainer.setFill(Color.WHITE);
+		rContainer = new Rectangle(width, height);
+//		rContainer.setStroke(Color.BLACK);
+		rContainer.setFill(Color.WHITE);
 		
-		grid = new Rectangle[_width / 25][_height / 25];
+		grid = new Rectangle[width / 25][height / 25];
 		
-		for (int i = 0; i < _width / 25; i++) {
-			for (int j = 0; j < _height / 25; j++) {
+		for (int i = 0; i < width / 25; i++) {
+			for (int j = 0; j < height / 25; j++) {
 				grid[j][i] = new Rectangle(j * 25, i * 25, 25, 25);
 				if((j + i)% 2 == 0) {
 					grid[j][i].setFill(Color.LIGHTBLUE);
@@ -58,40 +61,44 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			}
 		}
 		
-		s = new Snake(_width, _height);
+		s = new Snake(width, height);
 		s.show();
+		
 		w = new Wall("w1");
 		w.show();
+		
 		f = new Food("f1");
 		f.show();
 		
-		f.setTranslateX(r.nextInt(_width / 25) * 25);
-		f.setTranslateY(r.nextInt(_height / 25) * 25);
-		w.setTranslateX(r.nextInt(_width / 25) * 25);
-		w.setTranslateY(r.nextInt(_height / 25) * 25);
+		f.setTranslateX(r.nextInt(width / 25) * 25);
+		f.setTranslateY(r.nextInt(height / 25) * 25);
+		w.setTranslateX(r.nextInt(width / 25) * 25);
+		w.setTranslateY(r.nextInt(height / 25) * 25);
 	}
 
 	@Override
 	public void show() {
 		p = new Pane();
-		setMaxSize(_width, _height);
+		setMaxSize(width, height);
 		
-		for (int i = 0; i < _width / 25; i++) {
-			for (int j = 0; j < _height / 25; j++) {
+		for (int i = 0; i < width / 25; i++) {
+			for (int j = 0; j < height / 25; j++) {
 				p.getChildren().add(grid[i][j]);
 			}
 		}
+		
 		p.getChildren().add(s);
 		p.getChildren().add(w);
+		
 		p.getChildren().add(f);
 		getChildren().add(p);
 	
-//		addEventFilter(MouseEvent.MOUSE_CLICKED, event -> System.out.println("Clicked!"));
+//		addEventFilter(MouseEvent.MOUSECLICKED, event -> System.out.println("Clicked!"));
 		
 	}
 	
 	public String toString() {
-		return String.format("%s", _name);
+		return String.format("%s", name);
 	}
 
 	@Override
@@ -103,19 +110,15 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 				if(ke.getCode() == KeyCode.W) {
 					s.setDirection(0, -25);
 					checkFoodPos();
-					checkWallPos();
 				} else if(ke.getCode() == KeyCode.A) {
 					s.setDirection(-25, 0);
 					checkFoodPos();
-					checkWallPos();
 				} else if(ke.getCode() == KeyCode.S) {
 					s.setDirection(0, 25);
 					checkFoodPos();
-					checkWallPos();
 				} else if(ke.getCode() == KeyCode.D) {
 					s.setDirection(25, 0);
 					checkFoodPos();
-					checkWallPos();
 				}
 			} catch(Exception e) {System.out.println("err");}
 			
@@ -126,22 +129,46 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		}
 	}
 	
+	public void checkMode() {
+		if(mode.equals("snake20Mode")) {
+			System.out.println("snake20 on");
+			try {
+				p.getChildren().addAll(w);
+			} catch(Exception e) {
+				System.out.println("wall is currently visible");
+			}
+				
+			checkWallPos();
+		} else {
+			System.out.println("snake20 off");
+			p.getChildren().removeAll(w);
+		}
+	}
+	
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	
+	public String getMode() {
+		return mode;
+	}
+	
 	public void checkFoodPos() {
 		if((int)s.getHeadxPos() == (int)f.getTranslateX() && (int)s.getHeadyPos() == (int)f.getTranslateY()) {
 			System.out.println("food true");
-			f.setTranslateX(r.nextInt(_width / 25) * 25);
-			f.setTranslateY(r.nextInt(_height / 25) * 25);
+			f.setTranslateX(r.nextInt(width / 25) * 25);
+			f.setTranslateY(r.nextInt(height / 25) * 25);
 			s.grow();
-			Main.setScore();
+			Main.updateScore();
 		}
 	}
 	
 	public void checkWallPos() {
 		if((int)s.getHeadxPos() == (int)w.getTranslateX() && (int)s.getHeadyPos() == (int)w.getTranslateY()) {
 			System.out.println("wall true");
-			w.setTranslateX(r.nextInt(_width / 25) * 25);
-			w.setTranslateY(r.nextInt(_height / 25) * 25);
-			Main.setLives();
+			w.setTranslateX(r.nextInt(width / 25) * 25);
+			w.setTranslateY(r.nextInt(height / 25) * 25);
+			Main.updateScore();
 //			Main_v2.setScore();
 		}
 	}
