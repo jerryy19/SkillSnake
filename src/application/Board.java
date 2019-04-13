@@ -2,6 +2,9 @@ package application;
 
 import java.util.Random;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -10,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -30,6 +34,7 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	Food f;
 	Wall w;
 	String mode =  "snake20Mode";
+	static Timeline timeline = new Timeline();
 
 	
 	Random r = new Random();
@@ -107,26 +112,34 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		if(event instanceof KeyEvent) {
 			KeyEvent ke = (KeyEvent) event;
 			try {
-				if(ke.getCode() == KeyCode.W) {
-					s.setDirection(0, -25);
-					checkFoodPos();
-				} else if(ke.getCode() == KeyCode.A) {
-					s.setDirection(-25, 0);
-					checkFoodPos();
-				} else if(ke.getCode() == KeyCode.S) {
-					s.setDirection(0, 25);
-					checkFoodPos();
-				} else if(ke.getCode() == KeyCode.D) {
-					s.setDirection(25, 0);
-					checkFoodPos();
+				if(ke.getCode() == KeyCode.W || ke.getCode() == KeyCode.UP) {
+					move(0, -25);
+				} else if(ke.getCode() == KeyCode.A || ke.getCode() == KeyCode.LEFT) {
+					move(-25, 0);
+				} else if(ke.getCode() == KeyCode.S || ke.getCode() == KeyCode.DOWN) {
+					move(0, 25);
+				} else if(ke.getCode() == KeyCode.D || ke.getCode() == KeyCode.RIGHT) {
+					move(25, 0);
 				}
-			} catch(Exception e) {System.out.println("err");}
+			} catch(Exception e) {System.out.println("err in keyevent");}
 			
 //			if(((KeyEvent) event).getCode() == KeyCode.I) {
 //				s.setTranslateX(s.getTranslateX() + 25);
 //			}
 //			System.out.println(((KeyEvent) event).getCode());
 		}
+	}
+	
+	public void move(double x, double y) {
+		timeline.stop();
+		timeline = new Timeline(new KeyFrame(
+				Duration.millis(160), ae -> {
+					s.setDirection(x, y);
+					checkFoodPos();
+				}
+		));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
 	}
 	
 	public void checkMode() {
@@ -169,7 +182,6 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			w.setTranslateX(r.nextInt(width / 25) * 25);
 			w.setTranslateY(r.nextInt(height / 25) * 25);
 			Main.updateScore();
-//			Main_v2.setScore();
 		}
 	}
 	

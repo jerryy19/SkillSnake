@@ -24,7 +24,6 @@ public class Snake extends Pane implements Sprite {
 	
 	private double bwidth, bheight;
 	private double headx, heady;
-	
 	Button b;
 	
 	
@@ -58,7 +57,7 @@ public class Snake extends Pane implements Sprite {
 		if(snake.get(0).getTranslateX() < 0 || snake.get(0).getTranslateX() > bwidth - 25||
 				snake.get(0).getTranslateY() < 0 || snake.get(0).getTranslateY() > bheight - 25) {
 //			endGame();
-			if(Main.getLives() > 0) {
+			if(Main.getLives() > 1) {
 				retry();				
 			} else {
 				endGame();
@@ -70,15 +69,25 @@ public class Snake extends Pane implements Sprite {
 		Main.updateLives();
 		
 		shift(0, 0);
+		Board.timeline.stop();
+		
 	}
 	
 	public void setDirection(double xdir, double ydir) {
 		this.xdir = xdir;
 		this.ydir = ydir;
+//		timeline = new Timeline(new KeyFrame(
+//				Duration.millis(100), ae -> {
+//					update();
+//				}
+//		));
+//		timeline.setCycleCount(Animation.INDEFINITE);
+//		timeline.play();
 		update();
 	}
 	
 	public void update() {
+		
 //		get positions before updating them
 		xpos.set(0, snake.get(0).getTranslateX());
 		ypos.set(0, snake.get(0).getTranslateY());
@@ -168,6 +177,7 @@ public class Snake extends Pane implements Sprite {
 		getChildren().removeAll(snake);
 		Main.updateHighscore();
 		Main.reset();
+		Board.timeline.stop();
 		headx = 0;
 		heady = 0;
 		bodyCount = 0;
