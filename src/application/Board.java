@@ -30,11 +30,15 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	private String name;				// name of Board
 	private Rectangle[][] grid;
 	Pane p;
-	Snake s;
+	Snake snake;
 	Food f;
-	Wall w;
-	String mode =  "snake20Mode";
+	Wall w[];
+	static String mode =  "snake20Mode";
 	static Timeline timeline = new Timeline();
+	
+	int highscore;
+	
+	int scaleWidth, scaleHeight;
 
 	
 	Random r = new Random();
@@ -43,8 +47,14 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		width = w;
 		height = h;
 		this.name = name;
+		
+		scaleWidth = width / 25;
+		scaleHeight = height / 25;
+		
 		draw();
 		
+
+
 //		W A S D
 		setOnKeyPressed(this);
 	}
@@ -53,10 +63,10 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 //		rContainer.setStroke(Color.BLACK);
 		rContainer.setFill(Color.WHITE);
 		
-		grid = new Rectangle[width / 25][height / 25];
+		grid = new Rectangle[scaleWidth][scaleHeight];
 		
-		for (int i = 0; i < width / 25; i++) {
-			for (int j = 0; j < height / 25; j++) {
+		for (int i = 0; i < scaleWidth; i++) {
+			for (int j = 0; j < scaleHeight; j++) {
 				grid[j][i] = new Rectangle(j * 25, i * 25, 25, 25);
 				if((j + i)% 2 == 0) {
 					grid[j][i].setFill(Color.LIGHTBLUE);
@@ -66,19 +76,25 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			}
 		}
 		
-		s = new Snake(width, height);
-		s.show();
+		snake = new Snake(width, height);
+		snake.show();
 		
-		w = new Wall("w1");
-		w.show();
+		w = new Wall[(int) ((scaleWidth) * (scaleHeight) * 0.04)];
+		for(int i = 0; i < w.length; i++) {
+			w[i] = new Wall("w" + i);
+			w[i].show();
+			w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
+			w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+		}
 		
 		f = new Food("f1");
 		f.show();
 		
-		f.setTranslateX(r.nextInt(width / 25) * 25);
-		f.setTranslateY(r.nextInt(height / 25) * 25);
-		w.setTranslateX(r.nextInt(width / 25) * 25);
-		w.setTranslateY(r.nextInt(height / 25) * 25);
+		int x = r.nextInt(scaleWidth) * 25;
+		int y = r.nextInt(scaleHeight) * 25;
+		f.setTranslateX(x);
+		f.setTranslateY(y);
+		checkFoodWall(x, y);
 	}
 
 	@Override
@@ -86,14 +102,14 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		p = new Pane();
 		setMaxSize(width, height);
 		
-		for (int i = 0; i < width / 25; i++) {
-			for (int j = 0; j < height / 25; j++) {
+		for (int i = 0; i < scaleWidth; i++) {
+			for (int j = 0; j < scaleHeight; j++) {
 				p.getChildren().add(grid[i][j]);
 			}
 		}
 		
-		p.getChildren().add(s);
-		p.getChildren().add(w);
+		p.getChildren().add(snake);
+		p.getChildren().addAll(w);
 		
 		p.getChildren().add(f);
 		getChildren().add(p);
@@ -123,6 +139,11 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 				}
 			} catch(Exception e) {System.out.println("err in keyevent");}
 			
+			if(ke.getCode() == KeyCode.R) {
+				
+			}
+			
+			
 //			if(((KeyEvent) event).getCode() == KeyCode.I) {
 //				s.setTranslateX(s.getTranslateX() + 25);
 //			}
@@ -134,8 +155,9 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		timeline.stop();
 		timeline = new Timeline(new KeyFrame(
 				Duration.millis(160), ae -> {
-					s.setDirection(x, y);
+					snake.setDirection(x, y);
 					checkFoodPos();
+					checkWallPos();
 				}
 		));
 		timeline.setCycleCount(Animation.INDEFINITE);
@@ -150,11 +172,12 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			} catch(Exception e) {
 				System.out.println("wall is currently visible");
 			}
-				
-			checkWallPos();
+			
 		} else {
 			System.out.println("snake20 off");
 			p.getChildren().removeAll(w);
+			snake.restart();
+			Main.reset();
 		}
 	}
 	
@@ -166,23 +189,50 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		return mode;
 	}
 	
+	public void checkFoodWall(int x, int y) {
+		for(int i = 0; i < w.length; i++) {
+			if((int)f.getTranslateX() == (int)w[i].getTranslateX() && 
+					(int)f.getTranslateY() == (int)w[i].getTranslateY()) {
+				System.out.println("food wall true");
+				x = r.nextInt(scaleWidth) * 25;
+				y = r.nextInt(scaleHeight) * 25;
+				f.setTranslateX(x);
+				f.setTranslateY(y);
+				checkFoodWall(x, y);
+			} else {
+				
+			}
+		}
+	}
+	
 	public void checkFoodPos() {
-		if((int)s.getHeadxPos() == (int)f.getTranslateX() && (int)s.getHeadyPos() == (int)f.getTranslateY()) {
+		if((int)snake.getHeadxPos() == (int)f.getTranslateX() && (int)snake.getHeadyPos() == (int)f.getTranslateY()) {
 			System.out.println("food true");
-			f.setTranslateX(r.nextInt(width / 25) * 25);
-			f.setTranslateY(r.nextInt(height / 25) * 25);
-			s.grow();
+			int x = r.nextInt(scaleWidth) * 25;
+			int y = r.nextInt(scaleHeight) * 25;
+			f.setTranslateX(x);
+			f.setTranslateY(y);
+			checkFoodWall(x, y);
+			
+			snake.grow();
 			Main.updateScore();
 		}
 	}
 	
 	public void checkWallPos() {
-		if((int)s.getHeadxPos() == (int)w.getTranslateX() && (int)s.getHeadyPos() == (int)w.getTranslateY()) {
-			System.out.println("wall true");
-			w.setTranslateX(r.nextInt(width / 25) * 25);
-			w.setTranslateY(r.nextInt(height / 25) * 25);
-			Main.updateScore();
+		for(int i = 0; i < w.length; i++) {
+			if((int)snake.getHeadxPos() == (int)w[i].getTranslateX() && 
+					(int)snake.getHeadyPos() == (int)w[i].getTranslateY()) {
+				System.out.println("wall true");
+				snake.shrink();
+//				w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
+//				w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+			}
 		}
+	}
+	
+	public void endGame() {
+		snake.endGame();
 	}
 	
 }

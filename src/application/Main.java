@@ -104,6 +104,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			boardm.setMode("classicMode");
 			boardh.setMode("classicMode");
 			current.checkMode();
+			
 		});
 		
 		snake20Mode.setOnAction(e -> {							// switch from remake to classic(illusion new scene)
