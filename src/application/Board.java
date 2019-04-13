@@ -177,7 +177,7 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			System.out.println("snake20 off");
 			p.getChildren().removeAll(w);
 			snake.restart();
-			Main.reset();
+			Main_v1.reset();
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			checkFoodWall(x, y);
 			
 			snake.grow();
-			Main.updateScore();
+			Main_v1.updateScore();
 		}
 	}
 	

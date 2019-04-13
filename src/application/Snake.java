@@ -59,9 +59,9 @@ public class Snake extends Pane implements Sprite {
 		if(snakeBody.get(0).getTranslateX() < 0 || snakeBody.get(0).getTranslateX() > bwidth - 25||
 				snakeBody.get(0).getTranslateY() < 0 || snakeBody.get(0).getTranslateY() > bheight - 25) {
 			if(Board.mode.equals("snake20Mode")) {
-				if(Main.getLives() > 1) {
+				if(Main_v1.getLives() > 1) {
 					restart();
-					Main.updateLives();
+					Main_v1.updateLives();
 				} else {
 					endGame();
 				}
@@ -158,7 +158,7 @@ public class Snake extends Pane implements Sprite {
 	
 	public void shrink() {
 		if(snakeBody.size() < 2) {
-			Main.updateLives();
+			Main_v1.updateLives();
 			restart();
 		}
 //		} else {
@@ -200,8 +200,8 @@ public class Snake extends Pane implements Sprite {
 	
 	public void endGame() {
 		getChildren().removeAll(snakeBody);
-		Main.updateHighscore();
-		Main.reset();
+		Main_v1.updateHighscore();
+		Main_v1.reset();
 		Board.timeline.stop();
 		headx = 0;
 		heady = 0;
