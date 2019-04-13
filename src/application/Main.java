@@ -26,7 +26,7 @@ import javafx.scene.text.Font;
  */
 
 
-public class Main_v1 extends Application implements EventHandler<ActionEvent> {
+public class Main extends Application implements EventHandler<ActionEvent> {
 	
 	private Scene scene;
 	private HBox container;										// Main Container
