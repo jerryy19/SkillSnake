@@ -59,18 +59,21 @@ public class Snake extends Pane implements Sprite {
 		if(snakeBody.get(0).getTranslateX() < 0 || snakeBody.get(0).getTranslateX() > bwidth - 25||
 				snakeBody.get(0).getTranslateY() < 0 || snakeBody.get(0).getTranslateY() > bheight - 25) {
 			if(Board.mode.equals("snake20Mode")) {
-				if(Main.getLives() > 1) {
-					restart();
-					Main.updateLives();
-				} else {
-					endGame();
-				}
+				checkLives();
 			} else {
 				endGame();
 			}
 		}
 	}
 	
+	public void checkLives() {
+		if(Main.getLives() > 1) {
+			restart();
+			Main.updateLives();
+		} else {
+			endGame();
+		}
+	}
 	
 	public void setDirection(double xdir, double ydir) {
 		Snake.xdir = xdir;
@@ -157,19 +160,18 @@ public class Snake extends Pane implements Sprite {
 	}
 	
 	public void shrink() {
-		if(snakeBody.size() < 2) {
-			Main.updateLives();
-			restart();
+		if(snakeBody.size() <= 2) {
+			checkLives();
+		} else  {
+			getChildren().removeAll(snakeBody);
+			for(int i = 0; i < 2; i++) {
+				snakeBody.remove(snakeBody.size() - 1);
+				xpos.remove(snakeBody.size() - 1);
+				ypos.remove(snakeBody.size() - 1);
+			}
+			getChildren().addAll(snakeBody);
 		}
-//		} else {
-//			for(int i = 1; i <= 2; i++) {
-//				getChildren().removeAll(snakeBody);
-//				snakeBody.remove(snakeBody.size() - i);
-//				xpos.remove(snakeBody.size() - i);
-//				ypos.remove(snakeBody.size() - i);
-//				getChildren().addAll(snakeBody);
-//			}
-//		}
+		Main.updateScore(-2);
 	}
 	
 	public double getHeadxPos() {

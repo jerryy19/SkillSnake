@@ -85,6 +85,11 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			w[i].show();
 			w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
 			w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+			while(w[i].getTranslateX() == 0 && w[i].getTranslateY() == 0) {
+				w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
+				w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+				
+			}
 		}
 		
 		f = new Food("f1");
@@ -215,7 +220,7 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			checkFoodWall(x, y);
 			
 			snake.grow();
-			Main.updateScore();
+			Main.updateScore(1);
 		}
 	}
 	

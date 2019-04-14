@@ -278,8 +278,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 	}
 	
-	public static void updateScore() {
-		score.setText("Score: " + ++scoreCounter);
+	public static void updateScore(int inc) {
+		score.setText("Score: " + (scoreCounter += inc));
 	}
 	
 	public static void updateHighscore() {
