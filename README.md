@@ -25,4 +25,5 @@ UML : https://docs.google.com/document/d/1HlTt2x5cybDptHrCjLqP6s-X9846_Sg1J0cT46
 Presentation(Google Slides) : https://docs.google.com/presentation/d/1bfEEBO4sZM59ukdu_MEkvpb1XCi1G9Yrvmkdj82kZMI/edit?usp=sharing
 
 IDE: Eclipse
+
 Libraries used: JavaFX(eclipse(fx))
