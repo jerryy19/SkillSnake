@@ -34,6 +34,7 @@ Bugs :
 - Might throw an error somewhere in the game
 - Might not eat the apple sometimes
 - Did not set up snake hit detection on itself yet so the snake can overlap itself
+- Winner Labels stack 
 
 
 What I Learned From this Project : 
