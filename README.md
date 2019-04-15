@@ -40,7 +40,7 @@ What I Learned From this Project :
 - I should really learn how to properly use github and learn use debug mode while programming. My method of debugging thoughout this project was System.out.println() which is easy to use but a lot to work to clean up after. 
 
 
-UML : https://docs.google.com/document/d/1HlTt2x5cybDptHrCjLqP6s-X9846_Sg1J0cT46iNt7c/edit?usp=sharing
+UML : https://www.lucidchart.com/invitations/accept/21da6910-09b2-4c67-a212-30b7ac6776c2
 Presentation(Google Slides) : https://docs.google.com/presentation/d/1bfEEBO4sZM59ukdu_MEkvpb1XCi1G9Yrvmkdj82kZMI/edit?usp=sharing
 
 IDE: Eclipse
