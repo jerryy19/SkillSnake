@@ -8,39 +8,47 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * @author Jerry Yu
- * Date Due : 4 / 17 / 19
+ * Due Date: 4 / 17 / 19
  */
 
 public class Food extends Pane implements Sprite {
 	
-	private Rectangle rContainer;		// outline box(unnecessary)
-	private int width, height;			// width / height of Wall
-	private String name;				// name of Wall
+	private Rectangle r;				// outline box
+	private int width = 25;				// width of Food
+	private int height = 25;			// height of Food
+	private String name;				// name of Food
 	private Image apple;
 	private ImageView imgApple;
 	
 	Food(String name) {
 		
-		width = 25;
-		height = 25;
-		name = name;
+		this.name = name;
 		draw();
 		
 	}
 	
 	@Override
 	public void draw() {
+		
 		apple = new Image(getClass().getResourceAsStream("\\assets\\apple.png"));
 		imgApple = new ImageView(apple);
-		imgApple.setFitWidth(25);
-		imgApple.setFitHeight(25);
+		imgApple.setFitWidth(width);
+		imgApple.setFitHeight(height);
+		
+		r = new Rectangle(width, height);
+		r.setStroke(Color.LIGHTGRAY);
+		r.setFill(Color.TRANSPARENT);
+		
 	}
 	
 	@Override
 	public void show() {
-//		r = new Rectangle(width, height);
-//		r.setFill(Color.RED);
-		getChildren().add(imgApple);
+		getChildren().addAll(imgApple, r);
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 	
 }

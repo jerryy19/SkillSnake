@@ -4,26 +4,24 @@ import java.util.ArrayList;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /**
  * @author Jerry Yu
- * Date Due : 4 / 17 / 19
+ * Due Date: 4 / 17 / 19
  */
 
 public class Snake extends Pane implements Sprite {
 	
-	private ArrayList<Body> snakeBody = new ArrayList<>();
-	private ArrayList<Double> xpos = new ArrayList<>();
-	private ArrayList<Double> ypos = new ArrayList<>();
+	private ArrayList<Body> snakeBody = new ArrayList<>();			// body of snake
+	private ArrayList<Double> xpos = new ArrayList<>();				// x position of each snake body
+	private ArrayList<Double> ypos = new ArrayList<>();				// y position of each snake body
 	
-	private static double xdir, ydir;
-	private int bodyCount;
+	private static double xdir, ydir;								// direction of snake
+	private int bodyCount;											// labeling each body of snake
 	
-	private double bwidth, bheight;
-	private double headx, heady;
-	private Button b;
+	private double bwidth, bheight;									// board width and height
+	private double headx, heady;									// x and y position of the head
+	private Button b;												// end game button
 	
 	Snake(double x, double y) {
 		
@@ -66,8 +64,10 @@ public class Snake extends Pane implements Sprite {
 	
 	public void checkLives() {
 		if(Main.getLives() > 1) {
-			restart();
 			Main.updateLives();
+
+			shift(0, 0);
+			Board.timeline.stop();
 		} else {
 			endGame();
 		}
@@ -124,6 +124,7 @@ public class Snake extends Pane implements Sprite {
 		
 		int last = snakeBody.size() - 1;
 		
+//		appending snake body depending on direction the snake is going
 		lastxpos = (xdir > 0) ? snakeBody.get(last - 1).getTranslateX() - 25 : 
 			((xdir < 0) ? snakeBody.get(last - 1).getTranslateX() + 25 : snakeBody.get(last - 1).getTranslateX());
 		
@@ -200,7 +201,7 @@ public class Snake extends Pane implements Sprite {
 		
 		b = new Button("retry");
 		b.setMinSize(100, 100);
-		b.relocate(150, 150);
+		b.relocate(bwidth / 2, bheight / 2);
 		b.setOnAction(e -> {
 			getChildren().remove(b);
 			getChildren().addAll(snakeBody);
@@ -211,6 +212,10 @@ public class Snake extends Pane implements Sprite {
 	@Override
 	public String toString() {
 		return "Snake";
+	}
+	
+	public int getSize() {
+		return snakeBody.size();
 	}
 	
 }

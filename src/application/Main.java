@@ -16,12 +16,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Jerry Yu
- * Date Due : 4 / 17 / 19
+ * Due Date: 4 / 17 / 19
  */
 
 
@@ -44,8 +42,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	private ImageView imgSnake;
 	private TextArea ins;
 	
-	private Button restart;
-	
 	private boolean instructTF = false;
 	
 	
@@ -59,23 +55,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 		initGUI();					// initialize gui
 		
-		restart = new Button("restart");
-		restart.setOnAction(e -> {
-//			primaryStage.close();
-			try {
-				start(primaryStage);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		});
-		settingsPanel.getChildren().add(restart);
-		
 		scene = new Scene(container);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		scene.setOnKeyPressed(current);
 		
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Snaaaaake");
+		primaryStage.setTitle("SkillSnake");
 		primaryStage.setResizable(false);
 		primaryStage.sizeToScene();
 		primaryStage.show();
@@ -85,7 +70,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 	}
 	
+//	user interface controls
 	public void initUICtrl() {
+		
 		score = new Label("Score: 0");
 		highscore = new Label("Highscore: 0");
 		lives = new Label("Lives: 3");
@@ -98,12 +85,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		instructions = new Button("Instructions");
 		back = new Button("Back");
 		
-		snake = new Image(getClass().getResourceAsStream("\\assets\\snake.jpg"));
-		imgSnake = new ImageView(snake);
-		imgSnake.setFitWidth(100);
-		imgSnake.setFitHeight(100);
 	}
 	
+//	user interface control events
 	public void initUICtrlEvents() {
 		classicMode.setOnAction(e -> {							// switch from classic to remake(illusion new scene)
 			System.out.println("Classic Mode Event pressed");
@@ -195,6 +179,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		});
 	}
 
+//	creates the whole interface
 	public void initGUI() {
 		
 		settingsPanel = new VBox();
@@ -219,13 +204,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		container.getChildren().addAll(settingsPanel, gamePanel, switchPanel);
 		
 	}
-
+	
+//	settings for panes
 	public void setPanes(Pane p, double width, double height, Insets i, String color) {
 		p.setMinSize(width, height);
 		p.setPadding(i);
 		p.setStyle(" -fx-border-color: " + color);
 	}
 	
+//	game settings
 	public void initGame() {
 		boarde = new Board(400, 400, "boarde");
 		boardm = new Board(300, 300, "boardm");
@@ -237,6 +224,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 		current = boarde;
 		
+		snake = new Image(getClass().getResourceAsStream("\\assets\\snake.jpg"));
+		imgSnake = new ImageView(snake);
+		imgSnake.setFitWidth(100);
+		imgSnake.setFitHeight(100);
+		
 		scorePanel = new StackPane();
 		setPanes(scorePanel, 400, 25, new Insets(0, 10, 0, 10), "green");
 		scorePanel.setMaxSize(400, 25);
@@ -245,12 +237,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		StackPane.setAlignment(lives, Pos.CENTER_RIGHT);
 		scorePanel.getChildren().addAll(score, highscore, lives);
 		
-		
 		boardContainer= new VBox();
 		setPanes(boardContainer, 402, 402, new Insets(0, 0, 0, 0), "blue");	// transparent
 		boardContainer.setAlignment(Pos.CENTER);
 		boardContainer.getChildren().addAll(current);
-		
 		
 		instructionsPanel = new VBox();
 		setPanes(instructionsPanel, 420, 440, new Insets(10, 10, 10, 10), "purple");
@@ -258,34 +248,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		instructionsPanel.setSpacing(15);
 		
 		
-		
 		ins = new TextArea();
-					//"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 		ins.setText  ("The game is pretty simple. Use the arrow keys or WASD\n" + 
-					"to move the snake get as many points as possible.\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
+					"to move the snake get as many points as possible. In \n" + 
+					"this version of snake, if you hit a wall, you lose 2 parts of \n" + 
+					"your body and 2 points. If you have 2 or less snake body \n" + 
+					"parts, you will die and have 2 more tries. If the walls break\n" + 
+					"the game, press 1 to reset the walls. \n" + 
+					"\n" + 
+					"\n" + 
+					"If this game does not suit your taste, feel free to play the \n" + 
+					"classic version of snake by clicking the classic button. \n");
 		
 		ins.setPrefSize(402, 400);
 		ins.setEditable(false);
 		ins.setStyle("-fx-font: 15 times;");
-		
-//		Label ins = new Label("  aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa\n");
-//		ins.setTextFill(Color.PURPLE);
-//		ins.setFont(Font.font(15));
 		instructionsPanel.getChildren().addAll(back, ins);
 		
 	}

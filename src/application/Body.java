@@ -8,21 +8,20 @@ import javafx.scene.text.Font;
 
 /**
  * @author Jerry Yu
- * Date Due : 4 / 17 / 19
+ * Due Date: 4 / 17 / 19
  */
 
 public class Body extends StackPane implements Sprite {
 	
-	private Rectangle body;				// Body of snake
-	private int width, height;			// width / height of Body
+	private Rectangle body;				// body of snake
+	private int width = 25;				// width of body
+	private int height = 25;			// height of Body
 	private String name;				// name of Body
-	private static int count;
+	private static int count;			// body count
 	private Label lcount;
 	
 	Body(String name, int bodyCount) {
 		
-		width = 25;
-		height = 25;
 		this.name = name;
 		count = bodyCount;
 		draw();
@@ -31,13 +30,19 @@ public class Body extends StackPane implements Sprite {
 	
 	@Override
 	public void draw() {
+		
 		body = new Rectangle(width, height);
-		body.setFill(Color.TRANSPARENT);
+		if(count == 0) {
+			body.setFill(Color.YELLOW);
+		} else {
+			body.setFill(Color.TRANSPARENT);			
+		}
 		body.setStroke(Color.CRIMSON);
 		
 		lcount = new Label(Integer.toString(count));
 		lcount.setTextFill(Color.BLACK);
 		lcount.setFont(Font.font(15));
+		
 	}
 	
 	@Override

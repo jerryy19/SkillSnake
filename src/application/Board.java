@@ -7,24 +7,24 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
  * @author Jerry Yu
- * Date Due : 4 / 17 / 19
+ * Due Date: 4 / 17 / 19
  */
 
 public class Board extends VBox implements Sprite, EventHandler<Event> {
 	
-	private Rectangle rContainer;		// outline box(unnecessary)
+	private Rectangle rect;				// outline box
 	private int width, height;			// width / height of Board
 	private String name;				// name of Board
 	private Rectangle[][] grid;
@@ -32,12 +32,12 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	private Snake snake;
 	private Food f;
 	private Wall w[];
+	private int fill;					// boxes in grid
 	
 	static String mode =  "snake20Mode";
 	static Timeline timeline = new Timeline();
 	
 	private int scaleWidth, scaleHeight;
-	private static boolean colortf = true;
 	
 	Random r = new Random();
 	
@@ -57,9 +57,9 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		setOnKeyPressed(this);
 	}
 	public void draw() {
-		rContainer = new Rectangle(width, height);
+		rect = new Rectangle(width, height);
 //		rContainer.setStroke(Color.BLACK);
-		rContainer.setFill(Color.WHITE);
+		rect.setFill(Color.WHITE);
 		
 		grid = new Rectangle[scaleWidth][scaleHeight];
 		
@@ -74,34 +74,38 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			}
 		}
 		
+//		new snake
 		snake = new Snake(width, height);
 		snake.show();
 		
+//		new wall
 		w = new Wall[(int) ((scaleWidth) * (scaleHeight) * 0.04)];
 		for(int i = 0; i < w.length; i++) {
 			w[i] = new Wall("w" + i);
 			w[i].show();
-			w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
-			w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
-			while(w[i].getTranslateX() == 0 && w[i].getTranslateY() == 0) {
-				w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
-				w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
-				
-			}
 		}
+		newWall();
 		
+		
+//		new food
 		f = new Food("f1");
 		f.show();
 		
+//		food position
 		int x = r.nextInt(scaleWidth) * 25;
 		int y = r.nextInt(scaleHeight) * 25;
 		f.setTranslateX(x);
 		f.setTranslateY(y);
 		checkFoodWall(x, y);
+		
+//		number of boxes in the grid to fill
+//		fill = 4;
+		fill = scaleWidth * scaleHeight - w.length;
 	}
 
 	@Override
 	public void show() {
+		
 		p = new Pane();
 		setMaxSize(width, height);
 		
@@ -113,18 +117,24 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 		
 		p.getChildren().add(snake);
 		p.getChildren().addAll(w);
-		
 		p.getChildren().add(f);
+		
 		getChildren().add(p);
-	
-//		addEventFilter(MouseEvent.MOUSECLICKED, event -> System.out.println("Clicked!"));
 		
 	}
 	
-	public String toString() {
-		return String.format("%s", name);
+//	create wall positions
+	public void newWall() {
+		for(int i = 0; i < w.length; i++) {
+			w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
+			w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+			while(w[i].getTranslateX() == 0 && w[i].getTranslateY() == 0) {
+				w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
+				w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
+			}
+		}
 	}
-
+	
 	@Override
 	public void handle(Event event) {
 		
@@ -139,15 +149,11 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 					move(0, 25);
 				} else if(ke.getCode() == KeyCode.D || ke.getCode() == KeyCode.RIGHT) {
 					move(25, 0);
-				} else if(ke.getCode() == KeyCode.X) {
-					System.out.println("snake debug");
-//					if(colortf) {
-//						snake.setBody(Color.MEDIUMVIOLETRED, Color.DARKMAGENTA, colortf);
-//						colortf = false;
-//					} else {
-//						snake.setBody(Color.TRANSPARENT, Color.CRIMSON, colortf);
-//						colortf = true;
-//					}
+				} else if(ke.getCode() == KeyCode.DIGIT1) {
+//					System.out.println("true");
+					newWall();
+					p.getChildren().removeAll(w);
+					p.getChildren().addAll(w);
 				}
 				
 			} catch(Exception e) {System.out.println("err in keyevent");}
@@ -160,16 +166,33 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	}
 	
 	public void move(double x, double y) {
+		if(snake.isVisible()) {
+			
+		Label winner = new Label("Winner");
 		timeline.stop();
 		timeline = new Timeline(new KeyFrame(
 				Duration.millis(160), ae -> {
 					snake.setDirection(x, y);
 					checkFoodPos();
 					checkWallPos();
+					if(snake.getSize() == fill) {
+						timeline.stop();
+						System.out.println("winner");
+						Main.updateHighscore();
+						winner.relocate(50, 50);
+						winner.setTextFill(Color.GREEN);
+						winner.setFont(Font.font(20));
+						getChildren().add(winner);
+						endGame();
+					}
 				}
 		));
+		if(winner.isVisible()) {
+			getChildren().remove(winner);
+		}
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
+		}
 	}
 	
 	public void checkMode() {
@@ -190,7 +213,7 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	}
 	
 	public void setMode(String mode) {
-		this.mode = mode;
+		Board.mode = mode;
 	}
 	
 	public String getMode() {
@@ -232,7 +255,9 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 			if((int)snake.getHeadxPos() == (int)w[i].getTranslateX() && 
 					(int)snake.getHeadyPos() == (int)w[i].getTranslateY()) {
 				System.out.println("wall true");
-				snake.shrink();
+				if(mode.equals("snake20Mode")) {
+					snake.shrink();					
+				}
 //				w[i].setTranslateX(r.nextInt(scaleWidth) * 25);
 //				w[i].setTranslateY(r.nextInt(scaleHeight) * 25);
 			}
@@ -241,6 +266,10 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 	
 	public void endGame() {
 		snake.endGame();
+	}
+	
+	public String toString() {
+		return String.format("%s", name);
 	}
 	
 }
