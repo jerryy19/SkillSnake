@@ -48,4 +48,4 @@ IDE: Eclipse
 Libraries used: JavaFX(eclipse(fx))
 
 Credits : 
-I do not own the images used in this game. Credits due to the owners of the images. Regarding copyright issues please contact email : yrrejyu@gmail.com
+I do not own the images used in this game. Credits due to the owners of the images. Regarding copyright issues please submit and issue on this repository. 
