@@ -10,18 +10,18 @@ Project Description: This is a remake of the snake game. As a snake game can be 
 Plan(for this project) : 
 
 What I planned: 
-Week 1: Build GUI
-Week 2: Build snake nodes, movements
-Week 3: build walls, food, score counters, modes
-Week 4: make them work together
-Week 5: clean up code
+- Week 1: Build GUI
+- Week 2: Build snake nodes, movements
+- Week 3: build walls, food, score counters, modes
+- Week 4: make them work together
+- Week 5: clean up code
 
 What Actually Happened: 
-Week 1: Build GUI
-Week 2: nothing(zzz)
-Week 3: nothing(zzz)
-Week 4: Build everything
-Week 5: Build everything but clean up
+- Week 1: Build GUI
+- Week 2: nothing(zzz)
+- Week 3: nothing(zzz)
+- Week 4: Build everything
+- Week 5: Build everything but clean up
 
 Topics Covered : 
 - Class definition(Does not include main/static methods/variables)
