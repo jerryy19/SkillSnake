@@ -46,3 +46,6 @@ Presentation(Google Slides) : https://docs.google.com/presentation/d/1bfEEBO4sZM
 
 IDE: Eclipse
 Libraries used: JavaFX(eclipse(fx))
+
+Credits : 
+I do not own the images used in this game. Credits due to the owners of the images. Regarding copyright issues please contact email : yrrejyu@gmail.com
