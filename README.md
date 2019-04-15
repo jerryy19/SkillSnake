@@ -32,6 +32,8 @@ Topics Covered :
 Bugs :
 - If you hold down on an arrow keys or WASD, the snake will stop
 - Might throw an error somewhere in the game
+- Might not eat the apple sometimes
+- Did not set up snake hit detection on itself yet so the snake can overlap itself
 
 
 What I Learned From this Project : 
