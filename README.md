@@ -46,6 +46,7 @@ UML : https://www.lucidchart.com/invitations/accept/21da6910-09b2-4c67-a212-30b7
 Presentation(Google Slides) : https://docs.google.com/presentation/d/1bfEEBO4sZM59ukdu_MEkvpb1XCi1G9Yrvmkdj82kZMI/edit?usp=sharing
 
 IDE: Eclipse
+
 Libraries used: JavaFX(eclipse(fx))
 
 Credits : 
