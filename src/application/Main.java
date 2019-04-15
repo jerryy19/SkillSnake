@@ -20,9 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * 
- * 
- * 
+ * @author Jerry Yu
+ * Date Due : 4 / 17 / 19
  */
 
 
@@ -43,7 +42,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	private Board boarde, boardm, boardh, current;
 	private Image snake;
 	private ImageView imgSnake;
-	TextArea ins;
+	private TextArea ins;
+	
+	private Button restart;
 	
 	private boolean instructTF = false;
 	
@@ -57,6 +58,17 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 		
 		initGUI();					// initialize gui
+		
+		restart = new Button("restart");
+		restart.setOnAction(e -> {
+//			primaryStage.close();
+			try {
+				start(primaryStage);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		});
+		settingsPanel.getChildren().add(restart);
 		
 		scene = new Scene(container);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -249,8 +261,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		
 		ins = new TextArea();
 					//"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-		ins.setText  ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
-					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
+		ins.setText  ("The game is pretty simple. Use the arrow keys or WASD\n" + 
+					"to move the snake get as many points as possible.\n" + 
 					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
 					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 
 					"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n" + 

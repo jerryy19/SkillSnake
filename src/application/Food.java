@@ -7,9 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * 
- * 
- *
+ * @author Jerry Yu
+ * Date Due : 4 / 17 / 19
  */
 
 public class Food extends Pane implements Sprite {
@@ -17,8 +16,8 @@ public class Food extends Pane implements Sprite {
 	private Rectangle rContainer;		// outline box(unnecessary)
 	private int width, height;			// width / height of Wall
 	private String name;				// name of Wall
-	Image apple;
-	ImageView imgApple;
+	private Image apple;
+	private ImageView imgApple;
 	
 	Food(String name) {
 		

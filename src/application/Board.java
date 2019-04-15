@@ -18,28 +18,26 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
- * 
- * 
- * 
+ * @author Jerry Yu
+ * Date Due : 4 / 17 / 19
  */
 
 public class Board extends VBox implements Sprite, EventHandler<Event> {
 	
 	private Rectangle rContainer;		// outline box(unnecessary)
-	private int width, height;		// width / height of Board
+	private int width, height;			// width / height of Board
 	private String name;				// name of Board
 	private Rectangle[][] grid;
-	Pane p;
-	Snake snake;
-	Food f;
-	Wall w[];
+	private Pane p;
+	private Snake snake;
+	private Food f;
+	private Wall w[];
+	
 	static String mode =  "snake20Mode";
 	static Timeline timeline = new Timeline();
 	
-	int highscore;
-	
-	int scaleWidth, scaleHeight;
-
+	private int scaleWidth, scaleHeight;
+	private static boolean colortf = true;
 	
 	Random r = new Random();
 	
@@ -141,13 +139,18 @@ public class Board extends VBox implements Sprite, EventHandler<Event> {
 					move(0, 25);
 				} else if(ke.getCode() == KeyCode.D || ke.getCode() == KeyCode.RIGHT) {
 					move(25, 0);
+				} else if(ke.getCode() == KeyCode.X) {
+					System.out.println("snake debug");
+//					if(colortf) {
+//						snake.setBody(Color.MEDIUMVIOLETRED, Color.DARKMAGENTA, colortf);
+//						colortf = false;
+//					} else {
+//						snake.setBody(Color.TRANSPARENT, Color.CRIMSON, colortf);
+//						colortf = true;
+//					}
 				}
-			} catch(Exception e) {System.out.println("err in keyevent");}
-			
-			if(ke.getCode() == KeyCode.R) {
 				
-			}
-			
+			} catch(Exception e) {System.out.println("err in keyevent");}
 			
 //			if(((KeyEvent) event).getCode() == KeyCode.I) {
 //				s.setTranslateX(s.getTranslateX() + 25);

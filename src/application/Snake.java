@@ -8,9 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * 
- * 
- * 
+ * @author Jerry Yu
+ * Date Due : 4 / 17 / 19
  */
 
 public class Snake extends Pane implements Sprite {
@@ -24,8 +23,7 @@ public class Snake extends Pane implements Sprite {
 	
 	private double bwidth, bheight;
 	private double headx, heady;
-	Button b;
-	
+	private Button b;
 	
 	Snake(double x, double y) {
 		
@@ -120,26 +118,18 @@ public class Snake extends Pane implements Sprite {
 	public void grow() {
 		bodyCount++;
 		snakeBody.add(new Body("Body#" + bodyCount, bodyCount));
+		
 		double lastxpos = 0;
 		double lastypos = 0;
 		
 		int last = snakeBody.size() - 1;
 		
-		if(xdir > 0) {
-			lastxpos = snakeBody.get(last - 1).getTranslateX() - 25;
-		} else if(xdir < 0){
-			lastxpos = snakeBody.get(last - 1).getTranslateX() + 25;
-		} else {
-			lastxpos = snakeBody.get(last - 1).getTranslateX();
-		}
+		lastxpos = (xdir > 0) ? snakeBody.get(last - 1).getTranslateX() - 25 : 
+			((xdir < 0) ? snakeBody.get(last - 1).getTranslateX() + 25 : snakeBody.get(last - 1).getTranslateX());
 		
-		if(ydir > 0) {
-			lastypos = snakeBody.get(last - 1).getTranslateY() - 25;
-		} else if(ydir < 0){
-			lastypos = snakeBody.get(last - 1).getTranslateY() - 25;
-		} else {
-			lastypos = snakeBody.get(last - 1).getTranslateY();
-		}
+		lastypos = (ydir > 0) ? snakeBody.get(last - 1).getTranslateY() - 25 : 
+			((ydir < 0) ? snakeBody.get(last - 1).getTranslateY() + 25 : snakeBody.get(last - 1).getTranslateY());
+		
 		
 		snakeBody.get(last).setTranslateX(lastxpos);
 		snakeBody.get(last).setTranslateY(lastypos);
@@ -204,30 +194,19 @@ public class Snake extends Pane implements Sprite {
 		getChildren().removeAll(snakeBody);
 		Main.updateHighscore();
 		Main.reset();
-		Board.timeline.stop();
-		headx = 0;
-		heady = 0;
-		bodyCount = 0;
-		snakeBody.clear();
-		xpos.clear();
-		ypos.clear();
+
+		restart();
+		getChildren().removeAll(snakeBody);
 		
 		b = new Button("retry");
 		b.setMinSize(100, 100);
 		b.relocate(150, 150);
 		b.setOnAction(e -> {
 			getChildren().remove(b);
-			
-			snakeBody.add(new Body("Body#" + bodyCount, bodyCount));
-			snakeBody.get(0).show();
-			xpos.add(snakeBody.get(0).getTranslateX());
-			ypos.add(snakeBody.get(0).getTranslateY());
-			
 			getChildren().addAll(snakeBody);
 		});
 		getChildren().add(b);
 	}
-	
 	
 	@Override
 	public String toString() {
