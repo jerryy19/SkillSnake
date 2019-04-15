@@ -31,7 +31,7 @@ Topics Covered :
 
 Bugs :
 - If you hold down on an arrow keys or WASD, the snake will stop
-- 
+- Might throw an error somewhere in the game
 
 
 What I Learned From this Project : 
