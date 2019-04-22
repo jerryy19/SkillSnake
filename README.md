@@ -64,3 +64,5 @@ Libraries used: JavaFX(eclipse(fx))
 
 Credits : 
 I do not own the images used in this game. Credits to the owners of the images. Regarding copyright issues please submit the issue on this repository so I can take the images down. 
+
+This github repository: https://github.com/jerryy19/SkillSnake
