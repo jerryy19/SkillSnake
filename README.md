@@ -19,7 +19,7 @@ Original Purpose : The reason why I decided to remake the snake game is because 
 
 What I Learned From this Project : 
 - I should really learn how to properly use github and learn use debug mode in eclipse while programming. My method of debugging thoughout this project was System.out.println() which is easy to use but a lot to work to clean up after. 
-- It is till hard to keep track of fields and methods even if you separate them out into methods and classes. 
+- It is still hard to keep track of fields and methods even if you separate them out into methods and classes. 
 - I also learned that planning for a project is very difficult because it is completely different than just following instructions and doing a project. 
 - The last thing I learned from this project is to not to partner up with some of my friends for projects. My plan was just to focus on the project by ourselves; I would build the new version of snake while my partner would work on the classic version of snake. Then, I would integrate our work together and all would be good. I ended up doing everything myself. 
 
